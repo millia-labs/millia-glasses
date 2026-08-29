@@ -1,0 +1,40 @@
+# The reception scene — one utterance per line. Lines starting with # are skipped.
+# Mo's ruling, EoD 2026-08-28: the glasses demo is a guest at the desk.
+#
+#   uv run --active python scripts/glasses_guest_reset.py --yes
+#   uv run python scripts/glasses_host.py --login ry.chrisdemo@millia.test --script glasses/shot-list-reception.txt
+#
+#
+# As one take, spoken by two voices with the lobby behind the lens (no microphone, no Enter):
+#   uv run python scripts/glasses_host.py --login ry.chrisdemo@millia.test --script glasses/shot-list-reception.txt \
+#     --read-aloud --backdrop ~/Downloads/lobby.png
+#
+# The wearer is Ry Receptionist (ry.chrisdemo@millia.test), Sun & Moon on
+# millia-dev. In the house today (the reset seeds the first two and keeps them
+# in stay): 1013 Mark Rubio, 0712 Amira Hassan; and from the demo data
+# 1607 Wei Zhang, 2008 Hana Sato.
+#
+# `@button` is the Halo's button — Space in the window. `guest:` and `wearer:`
+# say who reads the line; both are audio to the ear. Millia speaks nothing in
+# this scene: the glass is the whole reply. WHAT THE PRESENTER POINTS AT:
+# (glass) the optic, (phone) MOPS, (phone 2) a colleague's MOPS.
+
+# 1. (glass) The guest walks up. The button: the ring lights, "Listening..".
+@button
+# 2. (glass) The room names the guest: 1013 large, "Mark Rubio" under it.
+guest: Hi, I'm in room 1013.
+# 3. (glass) The requests, as they are said. A red line under them: "How many
+#    towels?" — Millia needs the count before she files. The wearer asks.
+guest: The AC is a bit too noisy, and can I have some more towels, please?
+wearer: Of course. How many towels would you like?
+# 4. (glass) The count fills in; the line turns orange: the time is optional.
+guest: Four, please.
+wearer: When would you like them?
+# 5. (glass) The time fills in; no line at the foot. The exchange is over.
+guest: By six would be great.
+wearer: Done — we'll have them up by six, and someone will look at the AC.
+# 6. (glass) The button again: "2 tasks created" with the tick.
+@button
+
+# 7. (phone) Ry's MOPS: the two tasks, room 1013, filed by Ry, in the pool.
+# 8. (phone 2) A colleague's MOPS: the delivery task is accepted with Start Work.

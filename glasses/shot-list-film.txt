@@ -1,0 +1,27 @@
+# The reception scene over the cut film (Ryan, 2026-08-29): the film carries the
+# voices, the glass follows the clock. `start-end who: words` is a spoken line —
+# it goes up to Millia at `start`, the glass answers after `end`. `@cut T` twice:
+# the POV begins (glass on) and ends (glass off). `@button T` twice: opens the
+# session, files the tasks. Seconds are the film's, from Start.
+#
+#   uv run --active python scripts/glasses_guest_reset.py --yes
+#   uv run python scripts/glasses_host.py --login ry.chrisdemo@millia.test \
+#     --script glasses/shot-list-film.txt --read-aloud --backdrop ~/Downloads/<film>.mp4
+
+# Times measured on qOi4Q3Ece2ivJGHJGr4V(2).mp4 (31.0 s, 2026-08-29 20:14): the POV
+# cut lands at 3.05 s and ends at 24.95 s (frames every 0.1 s); the words are
+# faster-whisper's, word-timed. The second button is early on purpose: the close
+# takes the backend two or three seconds, and "2 tasks created" must be on the
+# glass before the cut.
+@cut 3.1
+@button 4.8
+6.3-7.7   guest:  Hi, I'm in room 1013.
+9.2-11.3  wearer: Of course, Mr. Rubio. How can I help you?
+11.7-14.7 guest:  The AC is a bit too noisy, and could I have four more towels, please?
+15.4-16.8 wearer: Absolutely. When would you like them?
+17.3-18.4 guest:  By six would be great.
+18.9-22.6 wearer: Done — we'll send four towels up by six, and someone will check the AC as well.
+@button 20.0
+23.0-24.0 guest:  Perfect, thank you.
+24.2-24.6 wearer: You're welcome.
+@cut 25.0

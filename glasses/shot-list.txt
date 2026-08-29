@@ -1,0 +1,76 @@
+# The recording, one utterance per line. Lines starting with # are skipped.
+#
+#   uv run --active python scripts/glasses_reset_clean.py 1213 1607 2008 --yes
+#   uv run python scripts/glasses_host.py --login maria.chrisdemo@millia.test
+#
+# Read the lines aloud; with the microphone the shot list is the crib sheet, not
+# the input. --script <this file> replays it without a microphone (then every
+# reply comes back in English: only audio is answered in the language spoken).
+#
+# MEASURED ON MILLIA-DEV 2026-08-28 — Sun & Moon, wearer Maria Santos
+# (maria.chrisdemo@millia.test). Today's board, and the whole reason for the
+# order below:
+#   1213  Departure  pending, ASSIGNED to Maria
+#   1607  B2B        pending, open to anyone
+#   2008  B2B        pending, open to anyone
+# The wearer is clocked in by the driver; without it every action is 409.
+#
+# THE NAME IS SAID ONCE PER EXCHANGE. For four seconds after Millia stops
+# speaking (--follow-up) the next line needs no wake word — the indented lines
+# below are inside that window. Wait longer and start again with "Millia".
+#
+# WHAT THE PRESENTER POINTS AT is marked on each beat: (glass) the optic,
+# (dashboard) admin.meetmillia.com, (phone) MOPS.
+
+# 1. (glass) The day, unasked-for detail and all: what is hers, and what is
+#    still open to anyone. Nobody read a list to her.
+Millia, what are my tasks today
+# 2. (dashboard → Assignment) She takes a room out of the pool by saying so.
+#    1607 flips to Maria on the board while she is still in a corridor.
+I'll take 1607
+# 3. (glass) She starts on the room she was given. The ring on the rim, step 1.
+Millia, start work at 1213
+# 4. (glass) A step done; the ring fills. No screen, no thumb.
+done
+# 5. (glass) She lost the thread; the glass tells her where she is.
+Millia, what is my step again?
+# 6. (glass) The sample photo for the step, as a thumbnail on the optic — the
+#    256-pixel answer to "can it show pictures".
+Millia, show me
+# 7. (glass) On with the room.
+done
+# 8. (dashboard → Maintenance) A fault, spoken mid-clean. The ticket appears
+#    on the cockpit with room 1213 on it, filed by Maria, while she keeps going.
+report: the bedside lamp is not working
+# 9. (phone) A request she will do herself: a housekeeping task on HER list.
+#    The MOPS bell rings and the amber badge shows on the glass; nothing spoken.
+Millia, report: the guest needs two extra towels
+# 10. (glass) The rest of the room, quickly: press Enter through them.
+done
+done
+done
+done
+# 11. (glass) The replenishment form needs actual counts, not another "done".
+Millia, how many Towels?
+Water bottle 2, Towels 4, Coffee Sachets 2, and Slippers 2
+yes
+# 12. (glass, phone) The room is finished; the ring closes.
+Millia, complete
+
+# 13. NOTIFICATION — the presenter does this, the wearer does not speak.
+#     (dashboard → Assignment) assign 2008 to Maria. A room she did not name,
+#     from a manager: within ~5 s the amber badge appears upper right on the
+#     glass, the iPhone banner drops at the same moment, the bell has the row.
+#     Nothing is spoken; the view stays. The badge clears itself after 6 s.
+
+# 14. (glass) Not the checklist: her day. A free question, answered from
+#     what she did, not from a menu.
+Millia, what did I do today?
+# 15. (glass) On to the next room. Nothing in progress now; the next clean is
+#     named, and how to begin it.
+Millia, okay, let's go for my next task, I'm on my way there.
+
+# Inspector beats, if there is time: a second run as a wearer with can_inspect,
+# once 1213 is completed. Pass the staged shot as --photo-url.
+# Millia, take the photo
+# Millia, redo, water spots on the mirror
