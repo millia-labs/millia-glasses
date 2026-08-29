@@ -20,8 +20,12 @@ dependencies = [
 dev = ["pytest>=8", "pytest-asyncio>=1.0.0", "ruff>=0.5", "mypy>=1.16"]
 
 [tool.pytest.ini_options]
+addopts = ["--strict-markers", "--strict-config"]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = [
+    "unit: marks tests as unit tests",
+]
 
 [tool.ruff]
 target-version = "py313"
@@ -63,11 +67,28 @@ ignore = [
 ]
 
 
+[tool.ruff.lint.per-file-ignores]
+# Scope, not suppression — the monorepo's ruling: a test's names are its output
+# (N8xx), and its strings pin the exact unicode the production messages carry
+# (RUF001-003). Scripts print by design.
+"tests/**/*.py" = [
+    "N801", "N802", "N803", "N806", "N811", "N814",
+    "RUF001", "RUF002", "RUF003",
+]
+"**/conftest.py" = ["F403", "F405"]
+"scripts/**/*.py" = ["T201", "T203"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
 [tool.ruff.lint.isort]
 known-first-party = ["scripts", "tests"]
 force-single-line = true
 single-line-exclusions = ["typing"]
 
 [tool.mypy]
+# The scripts are typed strictly; the tests carry the monorepo's
+# `# type: ignore[no-untyped-def]` idiom and are not checked there either.
+files = ["scripts"]
 strict = true
 explicit_package_bases = true

@@ -1,7 +1,11 @@
 # Handoff 2026-08-29 — the reception scene on the glasses (overnight build)
 
+> Written in the `millia` monorepo before the client half was split out (2026-08-29). Backend
+> paths here (`services/…`, `src/…`, `tests/api/…`, `scripts/deploy.sh`, worktrees) are relative
+> to that checkout, `../millia`; the client paths are this repo's.
+
 Branch `feat/glasses-polish`, worktree `.claude/worktrees/glasses-polish`. Design:
-`plans/glasses-reception-2026-08-29.md`. How to run it: `glasses/README.md` § "The
+`plans/glasses-reception-2026-08-29.md`. How to run it: `README.md` § "The
 reception scene". The take: `glasses/shot-list-reception.txt`.
 
 ## What is done
@@ -179,8 +183,7 @@ in the emulator and the real window code, headless.
 ## The morning
 
 ```bash
-cd .claude/worktrees/glasses-polish
-uv run --active python scripts/glasses_guest_reset.py --yes
+(cd ../millia && uv run python scripts/glasses_guest_reset.py --yes)
 uv run python scripts/glasses_host.py --login ry.chrisdemo@millia.test --script glasses/shot-list-reception.txt
 ```
 

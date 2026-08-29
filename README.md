@@ -37,7 +37,7 @@ once.
 # Sun & Moon's board on millia-dev, measured 2026-08-28: 1213 Departure is
 # assigned to Maria; 1607 and 2008 are B2B and open to anyone. --unassign puts
 # 1607 back in the pool so the shot list's "I'll take 1607" has something to take.
-uv run --active python scripts/glasses_reset_clean.py 1213 1607 2008 --unassign 1607 2008 --yes
+(cd ../millia && uv run python scripts/glasses_reset_clean.py 1213 1607 2008 --unassign 1607 2008 --yes)  # the reset lives in the backend checkout
 uv run python scripts/glasses_host.py --login maria.chrisdemo@millia.test --script glasses/shot-list.txt
 ```
 
@@ -103,6 +103,12 @@ Other modes:
   replayed through the same gate.
 - `--no-speak` for a silent run; `--headless` for no window; `--record out.mp4` writes the
   emulator window to a video file (30 fps) for a run without a screen recorder.
+- The film take (`glasses/shot-list-film.txt`): `--read-aloud` speaks a script's lines in two
+  voices, in one take, no Enter — the guest's voice is `--guest-voice` (default `ash`) and
+  `--gap` is the silence between the two people. `--backdrop room.mp4` puts a looping video
+  (or a still) behind the lens — the room the wearer stands in (needs ffmpeg, plays the
+  file's own sound); `--ui-from` / `--ui-until` are the seconds into the film where the
+  glass and the captions appear and leave, and the take begins at `--ui-from`.
 
 ## The clock, and the device budget (measured 2026-08-28)
 
@@ -176,7 +182,7 @@ Mo's ruling (EoD 2026-08-28): the demo is reception, not cleaning. The design is
 `plans/glasses-reception-2026-08-29.md`; the take is `glasses/shot-list-reception.txt`.
 
 ```bash
-uv run --active python scripts/glasses_guest_reset.py --yes     # Mark Rubio in 1013, Amira Hassan in 0712, in stay today; the last take's desk tasks removed
+(cd ../millia && uv run python scripts/glasses_guest_reset.py --yes)  # Mark Robelo in 1013, Amira Hassan in 0712, in stay today; the last take's desk tasks removed
 uv run python scripts/glasses_host.py --login ry.chrisdemo@millia.test --script glasses/shot-list-reception.txt
 ```
 
@@ -269,3 +275,11 @@ Codes live in `scripts/glasses_host.py` and are repeated in the Lua header.
   fit ends with `..`; the spoken cue always carries the whole sentence.
 - Keep `main.lua` ASCII. The upload path encodes it as latin-1.
 - "Task filed" reads as "Task failed" in the pixel font. The report cue says "Reported".
+
+## Check
+
+```bash
+uv run ruff check .      # the monorepo's rules (pyproject.toml); `ruff format` is not run, as there
+uv run mypy              # strict, on scripts/
+uv run pytest -q         # hermetic; the R&D and window tests skip without ffmpeg
+```

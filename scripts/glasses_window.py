@@ -21,6 +21,7 @@ from __future__ import annotations
 import math
 import shutil
 import subprocess
+import sys
 import threading
 import time
 from dataclasses import dataclass
@@ -148,12 +149,18 @@ class Backdrop:
             import sounddevice as sd  # type: ignore[import-untyped]
 
             assert proc.stdout is not None
-            with sd.RawOutputStream(samplerate=48000, channels=2, dtype="int16") as out:
-                while True:
-                    chunk = proc.stdout.read(9600)  # 50 ms
-                    if not chunk:
-                        return
+            chunk = proc.stdout.read(9600)  # 50 ms; a silent file yields nothing and no device is opened
+            if not chunk:
+                return
+            try:
+                out = sd.RawOutputStream(samplerate=48000, channels=2, dtype="int16")
+            except sd.PortAudioError as exc:  # no speakers (a headless box): the film runs mute
+                print(f"film audio: no output device ({exc}); the film runs mute", file=sys.stderr)
+                return
+            with out:
+                while chunk:
                     out.write(chunk)
+                    chunk = proc.stdout.read(9600)
 
         threading.Thread(target=pump, daemon=True, name="glasses-film-audio").start()
 

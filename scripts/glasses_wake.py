@@ -1,6 +1,10 @@
 """The wake word as Whisper spells it — vendored from the backend's
 millia_langraph.services.glasses.intent (the backend keeps the canon; the
-laptop's spotter asks this per word)."""
+laptop's spotter asks this per word).
+
+Copied verbatim from millia `src/millia_langraph/services/glasses/intent.py` on
+2026-08-29. A change to the wake family lands there first; diff against it
+before touching this file."""
 
 from __future__ import annotations
 
@@ -12,6 +16,7 @@ _WAKE_WORD = re.compile(rf"{_WAKE_FAMILY}", re.IGNORECASE)
 
 
 _WAKE_TARGETS = ("millia", "milia")
+
 
 def _edit_distance(a: str, b: str) -> int:
     prev = list(range(len(b) + 1))

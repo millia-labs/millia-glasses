@@ -1,5 +1,9 @@
 # Glasses endpoints — design (2026-08-26)
 
+> Written in the `millia` monorepo before the client half was split out (2026-08-29). Backend
+> paths here (`services/…`, `src/…`, `tests/api/…`, `scripts/deploy.sh`, worktrees) are relative
+> to that checkout, `../millia`; the client paths are this repo's.
+
 Trello card 155, *FEAT/Smart glasses demo thing*, item "Ready the endpoints for what the
 eventual glasses will communicate with on the app". Settled in a grilling session with Ryan
 on 2026-08-26; the CTO's later rulings amend this file. Decision record: ADR 0036. Vocabulary:

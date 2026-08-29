@@ -1,5 +1,9 @@
 # Glasses: the reception scene (2026-08-29, overnight build)
 
+> Written in the `millia` monorepo before the client half was split out (2026-08-29). Backend
+> paths here (`services/…`, `src/…`, `tests/api/…`, `scripts/deploy.sh`, worktrees) are relative
+> to that checkout, `../millia`; the client paths are this repo's.
+
 Source: EoD transcript 2026-08-28 (Mo, Jason, Ryan). Mo's ruling at 20:46–20:50: the
 glasses demo is **reception**, not cleaning. The cleaning beats stay in the code and in
 `glasses/shot-list.txt`; this scene is added beside them. Submission is the 30th.

@@ -1,5 +1,9 @@
 # Handoff — Glasses demo: emulator recording + display R&D (2026-08-26)
 
+> Written in the `millia` monorepo before the client half was split out (2026-08-29). Backend
+> paths here (`services/…`, `src/…`, `tests/api/…`, `scripts/deploy.sh`, worktrees) are relative
+> to that checkout, `../millia`; the client paths are this repo's.
+
 Trello card 155, *FEAT/Smart glasses demo thing*. Branch `feat/mops-smart-glasses-demo`, PR open.
 The backend half is done (`df1cfe392`, ADR 0036). Tonight the CTO (Jason) settled **how the demo
 is shown**, and raised one worry that needs R&D before anything is recorded. Both are below, so

@@ -1,14 +1,11 @@
-"""Fakes shared by the client-side tests: the glass as the host sees it, a voice that only records, the glass-shows poll, and the scene's lines."""
+"""Fakes shared by the client-side tests: the glass as the host sees it, a voice that only records, and the scene's lines."""
 
 from __future__ import annotations
 
-import asyncio
 from typing import Any
 
 HELLO = "Hi, I'm in room 1013"
 ASK = "The AC is a bit too noisy, and can I have some more towels?"
-FOUR = "Four please"
-SIX = "By six would be great"
 
 
 class _RecordingFrame:
@@ -53,16 +50,3 @@ class _Voice:
 
     def __call__(self, text: str) -> None:
         self.spoken.append(text)
-
-
-async def _glass_shows(frame: Any, colour: Any, *, within: float = 1.0) -> bool:
-    """The Lua loop polls every 50 ms; under load the draw lands after `say` returns."""
-
-    deadline = asyncio.get_running_loop().time() + within
-    while True:
-        img = frame.get_framebuffer().convert("RGB")
-        if any(colour(*img.getpixel((x, y))) for x in range(0, 256, 2) for y in range(0, 256, 2)):
-            return True
-        if asyncio.get_running_loop().time() > deadline:
-            return False
-        await asyncio.sleep(0.05)
