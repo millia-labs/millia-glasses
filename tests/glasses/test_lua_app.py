@@ -1,6 +1,6 @@
 """glasses/main.lua — the app that runs ON the glasses (and, unchanged, in the emulator).
 
-USER-VISIBLE ARTIFACT: the 256×256 framebuffer after a message arrives over
+USER-VISIBLE ARTIFACT: the 256x256 framebuffer after a message arrives over
 Bluetooth, seen through the round optic (radius 120 px). Every test drives the
 real Lua file inside the vendor's emulator through the vendor's own message
 layer (`EmulatorBrilliantMsg` + `data.lua` + `sprite.lua`) — the same bytes a

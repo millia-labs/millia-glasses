@@ -57,7 +57,6 @@ class _Voice:
 
 async def _glass_shows(frame: Any, colour: Any, *, within: float = 1.0) -> bool:
     """The Lua loop polls every 50 ms; under load the draw lands after `say` returns."""
-    import asyncio
 
     deadline = asyncio.get_running_loop().time() + within
     while True:

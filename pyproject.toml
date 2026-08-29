@@ -13,6 +13,7 @@ dependencies = [
     "numpy>=1.26.0",
     "pillow>=10.0.0",
     "sounddevice>=0.5",
+    "supabase>=2.0",  # --login mints a staff session against the dev project
 ]
 
 [dependency-groups]
@@ -23,8 +24,49 @@ asyncio_mode = "auto"
 testpaths = ["tests"]
 
 [tool.ruff]
-line-length = 120
 target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "N",  # pep8-naming
+    "S",  # bandit
+    "T20", # flake8-print
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+    "S101",  # use of assert
+    "S104",  # possible binding to all interfaces
+    "S105",  # possible hardcoded password
+    "S106",  # possible hardcoded password
+    "S107",  # possible hardcoded password
+    "S108",  # probable insecure usage of temp file/directory
+    "S301",  # suspicious pickle usage
+    "S311",  # suspicious random usage
+    "S324",  # probable use of insecure hash functions
+    "S501",  # probable use of requests call with verify=False
+    "S602",  # subprocess call with shell=True
+    "S603",  # subprocess call without shell=True
+    "S607",  # starting a process with a partial executable path
+    "T201",  # print found
+    "T203",  # pprint found
+]
+
+
+[tool.ruff.lint.isort]
+known-first-party = ["scripts", "tests"]
+force-single-line = true
+single-line-exclusions = ["typing"]
 
 [tool.mypy]
 strict = true

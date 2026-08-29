@@ -20,13 +20,10 @@ from typing import Any
 
 import httpx
 import pytest
-from halo_emulator import EmulatorBrilliantMsg  # type: ignore[import-untyped]
-from halo_emulator import HaloEmulator
 
 import scripts.glasses_host as host
 from tests.scripts.helpers import ASK
 from tests.scripts.helpers import HELLO
-from tests.scripts.helpers import _glass_shows
 from tests.scripts.helpers import _RecordingFrame
 from tests.scripts.helpers import _Voice
 

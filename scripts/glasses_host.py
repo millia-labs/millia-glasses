@@ -995,7 +995,6 @@ def mint_session(email: str, *, admin: Any) -> str:
 def admin_client_from_env() -> Any:
     """The service-role Supabase client `.env` points at (millia-dev here)."""
     from dotenv import load_dotenv
-
     from supabase import create_client
 
     load_dotenv(REPO / ".env")
