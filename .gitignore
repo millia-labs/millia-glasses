@@ -8,3 +8,5 @@ __pycache__/
 *.wav
 *.mp4
 !assets/demo-reception.mp4
+
+!assets/demo-reception.mp4

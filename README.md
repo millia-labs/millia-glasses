@@ -1,31 +1,37 @@
 # Millia Glasses
 
-**An AI assistant for the hotel front desk, on smart glasses.** A guest walks up
-and starts talking. The receptionist presses a button — and the glasses listen,
-recognise who the guest is from the in-house list, show what they're asking for,
-and prompt the receptionist for the one thing still missing. When the
-conversation ends, every request is already filed as a task another colleague's
-phone can claim. The receptionist never looks away from the guest, and never
-touches a screen.
+**AI on the receptionist's glasses.** This conversation is the entire demo —
+nobody types, taps, or writes anything down:
 
-**▶ [Watch the demo — 30 seconds](assets/demo-reception.mp4)**
+> **GUEST:** "Hi, I'm in room 1013."\
+> **FRONT DESK:** "Of course, sir. How can I help you?"\
+> **GUEST:** "The AC is a bit too noisy, and could I have four more towels, please?"\
+> **FRONT DESK:** "Absolutely. When would you like them?"\
+> **GUEST:** "By six would be great."\
+> **FRONT DESK:** "Done — we'll send four towels up by six, and someone will check the AC as well."
+
+The receptionist is wearing [Brilliant Labs Halo](https://brilliant.xyz) glasses.
+The moment the guest says *room 1013*, the glass shows **who is in 1013** — name
+and stay pulled live from the hotel's in-house list. The glasses transcribe the
+conversation as it happens, and by "you're welcome" two tasks already exist in
+the hotel's ops system, unassigned in the team pool for any colleague's phone to
+claim:
+
+- **maintenance** — noisy AC, room 1013
+- **delivery** — 4 towels to 1013, due by 6:00 PM
+
+**▶ [Watch it — 30 seconds](assets/demo-reception.mp4)**
 
 ![Through the glasses](docs/research/glasses-display-rnd/08_pov_through_glasses.png)
 
-The same glasses follow staff away from the desk: a cleaner works a room
-hands-free — *"Millia, done"* ticks the checklist, *"Millia, report: the bedside
-lamp is broken"* files a maintenance ticket mid-clean — in whatever language they
-speak.
-
-The device is a [Brilliant Labs Halo](https://brilliant.xyz): a round 256×256
-see-through display, microphones, a button, Bluetooth — and no network. Everything
-it shows and says is decided by **[Millia](https://meetmillia.com)**, an AI-native
-property-management system whose agents already run guest messaging, cleaning
-coordination, maintenance and billing for real buildings. The glasses are a new
-face on that same workforce: every voice command goes through the exact same
-permission gates, status machines and task doors a staff member's thumb tap uses
-in the phone app. **Zero new tables, zero new write paths** — if the glasses can
-do it, it was already allowed.
+The Halo is a round 256×256 see-through display, microphones, a button,
+Bluetooth — and no network. Everything it shows is decided by
+**[Millia](https://meetmillia.com)**, an AI property-management system whose
+agents already run guest messaging, cleaning coordination, maintenance and
+billing for real buildings. The glasses file tasks through the exact same doors
+a staff member's thumb tap uses in the phone app — **zero new tables, zero new
+write paths**. The same glasses follow staff away from the desk: a cleaner says
+*"Millia, done"* and the checklist ticks, in whatever language they speak.
 
 ## How it works
 
