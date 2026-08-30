@@ -20,8 +20,6 @@ claim:
 - **maintenance** — noisy AC, room 1013
 - **delivery** — 4 towels to 1013, due by 6:00 PM
 
-![Through the glasses](docs/research/glasses-display-rnd/08_pov_through_glasses.png)
-
 The Halo is a round 256×256 see-through display, microphones, a button,
 Bluetooth — and no network. Everything it shows is decided by
 **[Millia](https://meetmillia.com)**, an AI property-management system whose
