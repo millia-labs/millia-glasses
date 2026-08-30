@@ -1,27 +1,87 @@
-> **Standalone since 2026-08-29.** This repo is the client half: the laptop host
-> (`scripts/glasses_host.py`), the ear, the lens window, the Halo Lua app and the
-> shot lists. The brain stays in the `millia` backend (`/api/v1/glasses/*`,
-> ADR 0036). Two things did not move: the dev-data resets
-> (`scripts/glasses_guest_reset.py`, `glasses_reset_clean.py` — they use the
-> backend's Supabase client; run them from the `millia` checkout) and the tests
-> that drive the real FastAPI route (`tests/scripts/test_glasses_host.py` and the
-> route tests of `test_glasses_guest_session.py`). Fonts and the logo are vendored
-> under `assets/`. Setup: `uv sync --dev`, copy `.env.example` to `.env`.
+# Millia Glasses
 
-# Glasses app
+**A voice AI assistant for hotel staff, on smart glasses.** A cleaner says
+*"Millia, done"* and the checklist ticks. A receptionist presses a button and the
+glasses listen to the guest, resolve who they are from the in-house list, and file
+their requests as tasks a colleague's phone can claim — before the guest finishes
+talking.
 
-`main.lua` is the program that runs **on the glasses** — a Brilliant Halo — and, unchanged,
-inside the vendor's emulator. It only draws. It has no network and no opinion: the backend
-decides what to say and show (ADR 0036), the phone carries it over Bluetooth, this file puts
-it on the 256×256 round display.
+![Through the glasses](docs/research/glasses-display-rnd/08_pov_through_glasses.png)
 
-For the demo the laptop plays the phone: `scripts/glasses_host.py`.
+The device is a [Brilliant Labs Halo](https://brilliant.xyz): a round 256×256
+see-through display, microphones, a button, Bluetooth — and no network. Everything
+it shows and says is decided by **[Millia](https://meetmillia.com)**, an AI-native
+property-management system whose agents already run guest messaging, cleaning
+coordination, maintenance and billing for real buildings. The glasses are a new
+face on that same workforce: every voice command goes through the exact same
+permission gates, status machines and task doors a staff member's thumb tap uses
+in the phone app. **Zero new tables, zero new write paths** — if the glasses can
+do it, it was already allowed.
 
-## Run it — the glasses, on the laptop
+## How it works
+
+```
+ glasses ──BLE──▶ phone ──HTTPS──▶ Millia backend ──▶ transcribe → intent → act
+ (draws)  ◀─BLE── (relays) ◀─HTTPS──   (decides)        └─ one Cue: say + show
+```
+
+The split is total (ADR 0036, vendored in `docs/adr/`): **the glasses are a dumb
+pipe.** `glasses/main.lua` — the entire on-device app, 378 lines — only draws and
+reports button presses. The phone (played by a laptop here) relays audio up and a
+`Cue` back down. The backend transcribes, decides the intent — a fast-path table
+answers common verbs in under a second with no model call; everything else is one
+strict structured-output call — acts through existing doors, and answers **in the
+language the wearer spoke**.
+
+Two scenes ship, each with a shot list under `glasses/`:
+
+- **Cleaning** — a hands-free day: hear your tasks, claim a room by saying so,
+  tick steps, confirm counts, file a fault mid-clean without stopping, see a
+  reference photo on the optic, get a live badge when a manager reassigns you.
+- **Reception** — the button opens a guest session: Millia silently reads the
+  conversation, shows the wearer the guest's room and name, asks for what's
+  missing (red = won't file without it, orange = a default stands in), and on
+  close files every complete request into the team's pool.
+
+## Run it
 
 ```bash
-uv run python scripts/glasses_host.py --login maria.chrisdemo@millia.test
+uv sync --dev
+cp .env.example .env   # OPENAI_API_KEY for the voice; a staff JWT or dev keys for --login
+uv run python scripts/glasses_host.py --login <staff-email>
 ```
+
+A window opens: the view through one glass, the emulator's framebuffer composited
+additively the way a see-through optic works — black is transparent, the text
+floats. Click Start and talk: **"Millia, what are my tasks today."** The same
+program drives real hardware with one flag (`--hardware`): identical Lua, identical
+bytes, the vendor's own BLE framing.
+
+## The engineering
+
+- **Two-tier wake word.** An energy gate segments the mic; a local
+  `faster-whisper` tiny model transcribes the last 2.5 s every half-second and
+  fuzzy-matches each word against Whisper's real misspellings of "Millia"
+  (regex family + edit distance). On a hit the clip is *retroactively trimmed to
+  the wake word* and sent up for the backend's second opinion. Room talk that
+  never carries the name is dropped unsent.
+- **13 BLE chunks per photo.** The display R&D (`docs/research/`) measured the
+  real bottleneck — Bluetooth, not pixels: a raw photo is 384 chunks, a 4-bit
+  frame 64, a 112 px 16-colour thumbnail **13**. That's the shipped design.
+- **Text laid out against a circle.** The Lua app computes the visible chord
+  width at every row of the round optic and wraps to it; the R&D harness
+  *refuses at build time* to render a line the circle would clip.
+- **Latency is a feature.** Every response carries a `timing` map (transcribe /
+  context / parse / act / translate, in ms). Fast-path verbs skip the model
+  entirely; the intent parse runs with reasoning off (measured 3.65 s → 1.36 s).
+- **Stateless multi-turn.** Guest sessions re-send the whole transcript each
+  turn; the backend keeps nothing — no session table, no socket, and a retried
+  close is idempotent by `client_request_id`.
+- **Tested where it hurts.** Pixel-level assertions against the real Lua app in
+  the vendor emulator, and race-condition proofs that suspend a fake ASGI backend
+  mid-request to freeze the exact in-flight states that once lost a ticket.
+
+---
 
 ## The scripted take — read the lines, press Enter
 
@@ -34,9 +94,9 @@ model call each. Every spoken reply is cached on disk under `~/.cache/millia-gla
 once.
 
 ```bash
-# Sun & Moon's board on millia-dev, measured 2026-08-28: 1213 Departure is
-# assigned to Maria; 1607 and 2008 are B2B and open to anyone. --unassign puts
-# 1607 back in the pool so the shot list's "I'll take 1607" has something to take.
+# The demo tenant's board, measured 2026-08-28: 1213 Departure is assigned to
+# the wearer; 1607 and 2008 are B2B and open to anyone. --unassign puts 1607
+# back in the pool so the shot list's "I'll take 1607" has something to take.
 (cd ../millia && uv run python scripts/glasses_reset_clean.py 1213 1607 2008 --unassign 1607 2008 --yes)  # the reset lives in the backend checkout
 uv run python scripts/glasses_host.py --login maria.chrisdemo@millia.test --script glasses/shot-list.txt
 ```
@@ -65,10 +125,10 @@ Millia's reply as a subtitle at the bottom, and nothing else: what you said is n
 says good morning and waits — then the microphone listens, and you say
 **"Millia, …"** — "Millia, what are my tasks today", "Millia, done", "Millia, report: the
 bedside lamp is not working". Each utterance goes to `POST /api/v1/glasses/say` on
-millia-dev as audio (the phone's path: the backend transcribes and answers in the language
-spoken); the Cue comes back; the glass draws it; Millia speaks it. **Only another "Millia"
-interrupts her** — she keeps talking through anything else. Open the dashboard and MOPS
-beside the window and record the screen with whatever you like.
+the dev backend as audio (the phone's path: the backend transcribes and answers in the
+language spoken); the Cue comes back; the glass draws it; Millia speaks it. **Only another
+"Millia" interrupts her** — she keeps talking through anything else. Open the dashboard and
+MOPS beside the window and record the screen with whatever you like.
 
 The ear (`scripts/glasses_ear.py`) opens in two ways, and sends nothing otherwise:
 
@@ -112,8 +172,8 @@ Other modes:
 
 ## The clock, and the device budget (measured 2026-08-28)
 
-Where a turn's time goes, transcript in, against millia-dev from the laptop, before this
-day's work: context 490 ms; a fast-path verb 520–910 ms; `ask` 10.7 s; a 4.7 s audio
+Where a turn's time goes, transcript in, against the dev backend from the laptop, before
+this day's work: context 490 ms; a fast-path verb 520–910 ms; `ask` 10.7 s; a 4.7 s audio
 `report` 6.8 s. The verbs were fine. The rest was the model **thinking**: gpt-5-mini spent
 192 reasoning tokens and 3.65 s on the parse prompt for "report the bedside lamp"; the same
 call with `reasoning_effort="minimal"` took 1.36 s. Every glasses call now runs with
@@ -150,14 +210,14 @@ is the other door. Only the threshold needs tuning on the device; the backend do
   with a checklist; the JWT must belong to a staff member on it. Both routes return 409 when
   the flag is off.
 
-### Measured on millia-dev, 2026-08-27 (Sun & Moon, room 0712, task `4fba606e…`)
+### Measured against the deployed dev backend, 2026-08-27 (room 0712)
 
 The whole shot list ran end to end against the deployed backend — cleaner beats as Maria
 Santos, inspector beats as Daniel Tan — with these preconditions, each one a door MOPS
 uses too:
 
-1. **The flag**: `mops_config.glasses` was unset on Sun & Moon; set to `{"enabled": true}`
-   (the other keys untouched).
+1. **The flag**: `mops_config.glasses` was unset on the demo tenant; set to
+   `{"enabled": true}` (the other keys untouched).
 2. **A token per wearer** — `--login <email>` does this. No JWT secret is on disk, so the
    driver mints a real session: `auth.admin.generate_link(magiclink)` then
    `auth.verify_otp` → `access_token`, carrying `client_id`, `staff_id`, `role`,
@@ -178,8 +238,8 @@ A refused door (4xx) is spoken and shown with the question icon; the run does no
 
 ## The reception scene — a guest at the desk
 
-Mo's ruling (EoD 2026-08-28): the demo is reception, not cleaning. The design is
-`plans/glasses-reception-2026-08-29.md`; the take is `glasses/shot-list-reception.txt`.
+The design is `plans/glasses-reception-2026-08-29.md`; the take is
+`glasses/shot-list-reception.txt`.
 
 ```bash
 (cd ../millia && uv run python scripts/glasses_guest_reset.py --yes)  # Mark Robelo in 1013, Amira Hassan in 0712, in stay today; the last take's desk tasks removed
@@ -237,8 +297,8 @@ first poll only learns what is already there; every row that lands after it beco
 small amber badge**, upper right inside the optic, drawn over the current view (`0x0E`,
 one byte on/off) for `--notice-dwell` seconds (6), and the same row as an iOS banner on the
 booted simulator (`xcrun simctl push`, the row's own title and body; `--no-phone-banner`).
-Nothing is spoken and nothing is pushed off — a read-out notice broke the flow (Ryan,
-2026-08-28); the words are on the phone. Nothing is written: the row stays unread.
+Nothing is spoken and nothing is pushed off — a read-out notice broke the flow; the words
+are on the phone. Nothing is written: the row stays unread.
 
 
 ## Port to a real Halo
@@ -283,3 +343,15 @@ uv run ruff check .      # the monorepo's rules (pyproject.toml); `ruff format` 
 uv run mypy              # strict, on scripts/
 uv run pytest -q         # hermetic; the R&D and window tests skip without ffmpeg
 ```
+
+## Repo layout
+
+> **Standalone since 2026-08-29.** This repo is the client half: the laptop host
+> (`scripts/glasses_host.py`), the ear, the lens window, the Halo Lua app and the
+> shot lists. The brain stays in the `millia` backend (`/api/v1/glasses/*`,
+> ADR 0036). Two things did not move: the dev-data resets
+> (`scripts/glasses_guest_reset.py`, `glasses_reset_clean.py` — they use the
+> backend's Supabase client; run them from the `millia` checkout) and the tests
+> that drive the real FastAPI route (`tests/scripts/test_glasses_host.py` and the
+> route tests of `test_glasses_guest_session.py`). Fonts and the logo are vendored
+> under `assets/`. Setup: `uv sync --dev`, copy `.env.example` to `.env`.

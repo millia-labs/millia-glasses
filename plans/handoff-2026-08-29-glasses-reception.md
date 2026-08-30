@@ -4,7 +4,7 @@
 > paths here (`services/…`, `src/…`, `tests/api/…`, `scripts/deploy.sh`, worktrees) are relative
 > to that checkout, `../millia`; the client paths are this repo's.
 
-Branch `feat/glasses-polish`, worktree `.claude/worktrees/glasses-polish`. Design:
+Branch `feat/glasses-polish`. Design:
 `plans/glasses-reception-2026-08-29.md`. How to run it: `README.md` § "The
 reception scene". The take: `glasses/shot-list-reception.txt`.
 
