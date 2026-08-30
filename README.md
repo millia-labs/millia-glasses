@@ -1,12 +1,21 @@
 # Millia Glasses
 
-**A voice AI assistant for hotel staff, on smart glasses.** A cleaner says
-*"Millia, done"* and the checklist ticks. A receptionist presses a button and the
-glasses listen to the guest, resolve who they are from the in-house list, and file
-their requests as tasks a colleague's phone can claim — before the guest finishes
-talking.
+**An AI assistant for the hotel front desk, on smart glasses.** A guest walks up
+and starts talking. The receptionist presses a button — and the glasses listen,
+recognise who the guest is from the in-house list, show what they're asking for,
+and prompt the receptionist for the one thing still missing. When the
+conversation ends, every request is already filed as a task another colleague's
+phone can claim. The receptionist never looks away from the guest, and never
+touches a screen.
+
+**▶ [Watch the demo — 30 seconds](assets/demo-reception.mp4)**
 
 ![Through the glasses](docs/research/glasses-display-rnd/08_pov_through_glasses.png)
+
+The same glasses follow staff away from the desk: a cleaner works a room
+hands-free — *"Millia, done"* ticks the checklist, *"Millia, report: the bedside
+lamp is broken"* files a maintenance ticket mid-clean — in whatever language they
+speak.
 
 The device is a [Brilliant Labs Halo](https://brilliant.xyz): a round 256×256
 see-through display, microphones, a button, Bluetooth — and no network. Everything
@@ -35,13 +44,13 @@ language the wearer spoke**.
 
 Two scenes ship, each with a shot list under `glasses/`:
 
-- **Cleaning** — a hands-free day: hear your tasks, claim a room by saying so,
-  tick steps, confirm counts, file a fault mid-clean without stopping, see a
-  reference photo on the optic, get a live badge when a manager reassigns you.
 - **Reception** — the button opens a guest session: Millia silently reads the
   conversation, shows the wearer the guest's room and name, asks for what's
   missing (red = won't file without it, orange = a default stands in), and on
   close files every complete request into the team's pool.
+- **Cleaning** — a hands-free day: hear your tasks, claim a room by saying so,
+  tick steps, confirm counts, file a fault mid-clean without stopping, see a
+  reference photo on the optic, get a live badge when a manager reassigns you.
 
 ## Run it
 
