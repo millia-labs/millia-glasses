@@ -20,8 +20,6 @@ claim:
 - **maintenance** — noisy AC, room 1013
 - **delivery** — 4 towels to 1013, due by 6:00 PM
 
-**▶ [Watch it — 30 seconds](assets/demo-reception.mp4)**
-
 ![Through the glasses](docs/research/glasses-display-rnd/08_pov_through_glasses.png)
 
 The Halo is a round 256×256 see-through display, microphones, a button,

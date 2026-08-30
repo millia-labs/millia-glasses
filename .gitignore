@@ -7,6 +7,3 @@ __pycache__/
 *.pcm
 *.wav
 *.mp4
-!assets/demo-reception.mp4
-
-!assets/demo-reception.mp4
